@@ -1,0 +1,260 @@
+{
+    "id": "westgard",
+    "title": "Westgard Multi-Rules: QC Error Detection",
+    "description": "Master statistical quality control with Westgard multi-rule system",
+    "icon": "📈",
+    "difficulty": "Advanced",
+    "estimatedTime": "60 minutes",
+    "articles": [
+        {
+            "id": "westgard-basics",
+            "title": "Understanding Westgard Rules",
+            "content": {
+                "introduction": "The Westgard multi-rule system uses statistical control rules to detect analytical errors in laboratory testing. Each rule targets specific types of errors.",
+                "basicRules": [
+                    {
+                        "rule": "1-3s",
+                        "name": "Warning Rule",
+                        "definition": "One control exceeds mean ± 3SD",
+                        "errorType": "Random error (WARNING only)",
+                        "action": "Check next controls; accept run if no other violations",
+                        "falseRejection": "Low (~0.3%)"
+                    },
+                    {
+                        "rule": "2-2s",
+                        "name": "Systematic Error",
+                        "definition": "Two consecutive controls exceed mean ± 2SD on same side",
+                        "errorType": "Systematic error or shift",
+                        "action": "REJECT run; investigate and correct",
+                        "falseRejection": "~1%"
+                    },
+                    {
+                        "rule": "R-4s",
+                        "name": "Random Error",
+                        "definition": "Range between controls exceeds 4SD",
+                        "errorType": "Random error or precision problem",
+                        "action": "REJECT run; check precision, reagents",
+                        "falseRejection": "~0.1%"
+                    },
+                    {
+                        "rule": "4-1s",
+                        "name": "Systematic Trend",
+                        "definition": "Four consecutive controls exceed mean ± 1SD on same side",
+                        "errorType": "Systematic shift or trend",
+                        "action": "REJECT run; investigate calibration, reagent stability",
+                        "falseRejection": "~1%"
+                    },
+                    {
+                        "rule": "10-x",
+                        "name": "Sustained Shift",
+                        "definition": "Ten consecutive controls on same side of mean",
+                        "errorType": "Sustained systematic error",
+                        "action": "REJECT run; recalibrate or change reagents",
+                        "falseRejection": "<0.01%"
+                    }
+                ],
+                "multiRuleStrategy": {
+                    "description": "Use rules in combination for optimal error detection",
+                    "sequence": [
+                        "1. Run controls (2 levels recommended)",
+                        "2. Check 1-3s → If violated, apply other rules",
+                        "3. If only 1-3s violated → WARNING (may accept run)",
+                        "4. If 2-2s, R-4s, 4-1s, or 10-x violated → REJECT run"
+                    ],
+                    "benefits": [
+                        "Better error detection than single rule",
+                        "Lower false rejection rate",
+                        "Distinguishes random vs systematic errors"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "levey-jennings",
+            "title": "Levey-Jennings Charts",
+            "content": {
+                "purpose": "Visual tool to monitor QC performance over time",
+                "elements": {
+                    "mean": "Target value (center line)",
+                    "SD lines": "+1SD, +2SD, +3SD and -1SD, -2SD, -3SD",
+                    "QC points": "Plotted chronologically",
+                    "violations": "Marked when rules violated"
+                },
+                "interpretation": [
+                    "Points within ±2SD → In control",
+                    "Points near ±2SD → Borderline, watch closely",
+                    "Points beyond ±2SD → Apply Westgard rules",
+                    "Trends toward one side → Systematic shift",
+                    "Increasing scatter → Precision loss"
+                ],
+                "practicalTips": [
+                    "Plot both levels on same chart (different colors)",
+                    "Update monthly statistics when stable",
+                    "Investigate all rule violations",
+                    "Archive charts for trend analysis"
+                ]
+            }
+        },
+        {
+            "id": "error-types",
+            "title": "Understanding Error Types",
+            "content": {
+                "randomError": {
+                    "definition": "Unpredictable variations in measurement",
+                    "causes": [
+                        "Pipetting inconsistency",
+                        "Temperature fluctuations",
+                        "Sample mixing issues",
+                        "Electrical noise"
+                    ],
+                    "detection": "R-4s rule (wide range between controls)",
+                    "correction": [
+                        "Improve technique precision",
+                        "Control environmental conditions",
+                        "Maintain equipment",
+                        "Use automated pipettes"
+                    ]
+                },
+                "systematicError": {
+                    "definition": "Consistent bias in one direction",
+                    "causes": [
+                        "Calibration drift",
+                        "Reagent degradation",
+                        "Instrument malfunction",
+                        "Interfering substances"
+                    ],
+                    "detection": "2-2s, 4-1s, 10-x rules (shift to one side)",
+                    "correction": [
+                        "Recalibrate instrument",
+                        "Replace reagents",
+                        "Service equipment",
+                        "Investigate interferences"
+                    ]
+                },
+                "trendAnalysis": {
+                    "patterns": [
+                        "Upward trend → Reagent deterioration, calibrator instability",
+                        "Downward trend → Enzyme reagent loss, calibrator issue",
+                        "Cyclic pattern → Temperature fluctuations, periodic maintenance",
+                        "Sudden shift → New lot, recalibration, instrument change"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "practical-application",
+            "title": "Practical Application Guide",
+            "content": {
+                "setupPhase": {
+                    "title": "Setting Up Westgard Rules",
+                    "steps": [
+                        "1. Establish baseline statistics (mean, SD) using 20-30 runs",
+                        "2. Verify Gaussian distribution of QC data",
+                        "3. Set up Levey-Jennings charts with ±3SD limits",
+                        "4. Train staff on rule interpretation",
+                        "5. Document procedures in SOP"
+                    ]
+                },
+                "dailyWorkflow": {
+                    "title": "Daily QC Workflow",
+                    "steps": [
+                        "1. Run controls before patient samples",
+                        "2. Plot values on L-J chart",
+                        "3. Check 1-3s rule first",
+                        "4. If 1-3s violated, check other rules",
+                        "5. Document decision (accept/reject) with justification",
+                        "6. If rejected, troubleshoot and repeat QC",
+                        "7. Never report patient results with rejected QC"
+                    ]
+                },
+                "realExamples": [
+                    {
+                        "scenario": "Level 1 = 105 (mean=100, SD=2), Level 2 = 210 (mean=200, SD=3)",
+                        "analysis": "Level 1 exceeds +2SD (104), Level 2 exceeds +3SD (209)",
+                        "rules": "1-3s violated (Level 2), 2-2s violated (both >+2SD)",
+                        "decision": "REJECT - Systematic error likely. Recalibrate.",
+                        "action": "Recalibrated instrument. Repeated QC: L1=101, L2=198. Accepted."
+                    },
+                    {
+                        "scenario": "Level 1 = 103, 97, 104, 96 (mean=100, SD=2)",
+                        "analysis": "Range = 104-96 = 8 units = 4SD",
+                        "rules": "R-4s violated",
+                        "decision": "REJECT - Random error, precision problem",
+                        "action": "Replaced reagents, checked pipettes. Issue resolved."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "advanced-concepts",
+            "title": "Advanced Westgard Concepts",
+            "content": {
+                "powerFunctions": {
+                    "description": "Probability of detecting errors of various sizes",
+                    "interpretation": [
+                        "Larger errors → Higher detection probability",
+                        "Multi-rule systems → Better power than single rules",
+                        "More control levels → Improved error detection"
+                    ]
+                },
+                "sigmauMetrics": {
+                    "description": "Assess method performance quality",
+                    "formula": "Sigma = (TEa - Bias) / CV",
+                    "interpretation": {
+                        "6-sigma": "World class",
+                        "5-sigma": "Excellent",
+                        "4-sigma": "Good",
+                        "3-sigma": "Marginal",
+                        "<3-sigma": "Poor - needs improvement"
+                    }
+                },
+                "equivalentQC": {
+                    "concept": "Non-traditional QC approaches",
+                    "methods": [
+                        "Patient-based QC (moving averages)",
+                        "Electronic QC (instrument self-checks)",
+                        "Bracket controls (start/end of day)"
+                    ],
+                    "applicability": "Must demonstrate equal or better error detection"
+                }
+            }
+        }
+    ],
+    "interactiveTools": {
+        "westgardSimulator": {
+            "description": "Upload QC data, see rule violations highlighted",
+            "features": [
+                "Auto-detect violations",
+                "Visual L-J charts",
+                "Recommended actions",
+                "Historical trending"
+            ]
+        },
+        "sigmaCalculator": {
+            "inputs": [
+                "TEa",
+                "Bias",
+                "CV"
+            ],
+            "output": "Sigma metric + QC strategy recommendation"
+        }
+    },
+    "quickReference": {
+        "ruleMemoryAid": "2-2's and R-4's, 4-1's and 10-x's - they all reject!",
+        "commonMistakes": [
+            "Using only 1-3s rule (misses systematic errors)",
+            "Not plotting controls (miss trends)",
+            "Accepting borderline QC 'because it's close'",
+            "Not investigating root cause of violations",
+            "Running patient samples with rejected QC"
+        ],
+        "bestPractices": [
+            "Use at least 2 control levels",
+            "Apply full multi-rule system",
+            "Plot L-J charts daily",
+            "Update statistics monthly when stable",
+            "Document all QC decisions",
+            "Investigate and correct all violations"
+        ]
+    }
+}

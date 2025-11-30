@@ -1,0 +1,416 @@
+{
+    "id": "cdc-qms",
+    "title": "CDC Quality Management System Essentials",
+    "description": "The 12 essential pillars of laboratory quality management",
+    "icon": "🏥",
+    "difficulty": "Comprehensive",
+    "estimatedTime": "90 minutes",
+    "essentials": [
+        {
+            "number": 1,
+            "title": "Organization & Personnel",
+            "description": "Establish laboratory structure, roles, and competent staff",
+            "keyRequirements": [
+                "Define organizational structure and reporting relationships",
+                "Document roles, responsibilities, and authorities",
+                "Ensure adequate staffing levels",
+                "Maintain competency records for all personnel",
+                "Provide ongoing education and training"
+            ],
+            "bestPractices": [
+                "Create org charts showing clear lines of authority",
+                "Use job descriptions with specific competencies",
+                "Track training hours and certification renewals",
+                "Conduct annual competency assessments",
+                "Foster culture of quality and patient safety"
+            ],
+            "selfAssessment": [
+                "Are all positions filled with qualified personnel?",
+                "Do job descriptions match actual responsibilities?",
+                "Is competency assessed at hire, annually, and after errors?",
+                "Is there a succession plan for key positions?"
+            ]
+        },
+        {
+            "number": 2,
+            "title": "Equipment Management",
+            "description": "Ensure equipment is suitable, maintained, and performs correctly",
+            "keyRequirements": [
+                "Establish equipment inventory",
+                "Perform initial and ongoing verification",
+                "Maintain preventive maintenance schedule",
+                "Monitor equipment performance",
+                "Document all equipment activities"
+            ],
+            "lifecycle": [
+                "Selection → Criteria based on lab needs, validated performance",
+                "Installation → IQ/OQ verification, initial calibration",
+                "Operation → Daily checks, QC monitoring",
+                "Maintenance → Scheduled PM, corrective repairs",
+                "Retirement → Document decommissioning, data archival"
+            ],
+            "selfAssessment": [
+                "Is there a current equipment inventory?",
+                "Are all instruments calibrated and verified?",
+                "Is preventive maintenance up to date?",
+                "Are equipment issues promptly addressed and documented?"
+            ]
+        },
+        {
+            "number": 3,
+            "title": "Purchasing & Inventory",
+            "description": "Procure quality materials and manage inventory effectively",
+            "keyRequirements": [
+                "Evaluate and qualify suppliers",
+                "Purchase appropriate quality reagents/supplies",
+                "Receive and inspect incoming materials",
+                "Store items under proper conditions",
+                "Track inventory to prevent stockouts/expiry"
+            ],
+            "inventoryManagement": [
+                "FIFO (First In, First Out) for reagents",
+                "Reorder levels (ROL) for critical items",
+                "Expiry date monitoring",
+                "Lot number tracking for traceability",
+                "Storage condition monitoring (temp/humidity)"
+            ],
+            "selfAssessment": [
+                "Are suppliers evaluated before purchase?",
+                "Is inventory tracked in a systematic way?",
+                "Are stockouts prevented through ROL triggers?",
+                "Are expired materials promptly removed?"
+            ]
+        },
+        {
+            "number": 4,
+            "title": "Process Management",
+            "description": "Control pre-analytical, analytical, and post-analytical processes",
+            "keyRequirements": [
+                "Standardize procedures (SOPs)",
+                "Validate new methods before use",
+                "Monitor process performance",
+                "Control changes to processes",
+                "Ensure result accuracy and timeliness"
+            ],
+            "phaseControls": {
+                "preAnalytical": [
+                    "Patient identification",
+                    "Sample collection procedures",
+                    "Specimen handling and transport",
+                    "Sample acceptance/rejection criteria"
+                ],
+                "analytical": [
+                    "Method validation",
+                    "Calibration and QC",
+                    "Proficiency testing",
+                    "Result verification"
+                ],
+                "postAnalytical": [
+                    "Result review and release",
+                    "Critical value reporting",
+                    "Report formatting and distribution",
+                    "Result retention"
+                ]
+            },
+            "selfAssessment": [
+                "Are all processes documented in SOPs?",
+                "Are new methods validated before patient use?",
+                "Are process changes controlled and documented?",
+                "Is turnaround time monitored?"
+            ]
+        },
+        {
+            "number": 5,
+            "title": "Documents & Records",
+            "description": "Create, control, and maintain laboratory documentation",
+            "keyRequirements": [
+                "Control document creation and approval",
+                "Ensure current versions are in use",
+                "Archive superseded documents",
+                "Maintain records per regulatory requirements",
+                "Protect confidentiality of patient data"
+            ],
+            "documentHierarchy": [
+                "Level 1: Quality Manual (lab's QMS)",
+                "Level 2: SOPs (how to perform tests)",
+                "Level 3: Work instructions (detailed steps)",
+                "Level 4: Forms and records (evidence)"
+            ],
+            "recordRetention": {
+                "patientResults": "Minimum 2 years (CLIA)",
+                "QCRecords": "Minimum 2 years",
+                "proficiencyTesting": "Minimum 2 years",
+                "competencyAssessments": "Current + previous year",
+                "equipmentMaintenance": "Life of equipment + 2 years"
+            },
+            "selfAssessment": [
+                "Are documents version-controlled?",
+                "Are obsolete documents removed from use?",
+                "Are records complete and legible?",
+                "Is retention schedule followed?"
+            ]
+        },
+        {
+            "number": 6,
+            "title": "Information Management",
+            "description": "Manage laboratory information systems and data integrity",
+            "keyRequirements": [
+                "Validate LIS before use",
+                "Control system access (usernames/passwords)",
+                "Back up data regularly",
+                "Ensure data integrity and security",
+                "Have contingency plans for downtime"
+            ],
+            "dataIntegrity": [
+                "ALCOA principles: Attributable, Legible, Contemporaneous, Original, Accurate",
+                "Audit trails for all changes",
+                "Access controls (role-based)",
+                "Regular data backups (tested)",
+                "Disaster recovery plan"
+            ],
+            "selfAssessment": [
+                "Is the LIS validated and functioning correctly?",
+                "Are user access rights appropriate and updated?",
+                "Are backups performed and tested regularly?",
+                "Is there a downtime procedure?"
+            ]
+        },
+        {
+            "number": 7,
+            "title": "Occurrence Management",
+            "description": "Identify, report, investigate, and prevent errors",
+            "keyRequirements": [
+                "Define and detect errors/incidents",
+                "Report occurrences immediately",
+                "Investigate root causes",
+                "Implement corrective/preventive actions (CAPA)",
+                "Track and trend occurrences"
+            ],
+            "errorCategories": [
+                "Pre-analytical: Wrong patient, hemolysis, QNS",
+                "Analytical: QC failure, critical equipment failure",
+                "Post-analytical: Wrong result reported, delayed reporting",
+                "Safety: Exposure incident, spill"
+            ],
+            "rootCauseTools": [
+                "5 Whys",
+                "Fishbone (Ishikawa) diagram",
+                "Pareto analysis",
+                "Fault tree analysis"
+            ],
+            "selfAssessment": [
+                "Is there a system to capture all incidents?",
+                "Are root causes investigated, not just symptoms?",
+                "Are CAPA effective (errors don't recur)?",
+                "Are trends identified and addressed?"
+            ]
+        },
+        {
+            "number": 8,
+            "title": "Assessment: Quality Indicators",
+            "description": "Monitor performance using objective metrics",
+            "keyRequirements": [
+                "Select relevant quality indicators (QIs)",
+                "Establish targets and thresholds",
+                "Collect and analyze QI data",
+                "Take action when targets not met",
+                "Report QIs to stakeholders"
+            ],
+            "exampleQIs": [
+                "TAT (turnaround time) - % within target",
+                "Sample rejection rate - % rejected",
+                "QC failure rate - % runs rejected",
+                "Proficiency testing performance - % acceptable",
+                "Critical value notification time - average minutes",
+                "Amended report rate - % corrected"
+            ],
+            "dataAnalysis": [
+                "Run charts (trends over time)",
+                "Control charts (vs. control limits)",
+                "Pareto charts (prioritize issues)",
+                "Benchmarking (vs. peers)"
+            ],
+            "selfAssessment": [
+                "Are QIs monitored regularly?",
+                "Do QIs align with lab goals?",
+                "Are trends acted upon?",
+                "Are QIs reported to leadership?"
+            ],
+            "assistance": {
+                "title": "How We Assist You",
+                "description": "Our platform simplifies Quality Indicator tracking:",
+                "features": [
+                    "Automated data collection for Turnaround Time (TAT) and rejection rates",
+                    "Real-time dashboards for key performance indicators (KPIs)",
+                    "Benchmarking against anonymized peer data",
+                    "Automated report generation for leadership reviews"
+                ]
+            }
+        },
+        {
+            "number": 9,
+            "title": "Process Improvement",
+            "description": "Continuously improve laboratory operations",
+            "keyRequirements": [
+                "Use data to identify improvement opportunities",
+                "Engage staff in improvement projects",
+                "Apply structured improvement methods",
+                "Measure impact of changes",
+                "Sustain improvements"
+            ],
+            "improvementCycle": [
+                "Plan: Identify problem, analyze root cause, plan solution",
+                "Do: Implement change on small scale",
+                "Check: Measure results, compare to baseline",
+                "Act: If successful, standardize; if not, try again"
+            ],
+            "methodologies": [
+                "PDCA (Plan-Do-Check-Act)",
+                "Lean (eliminate waste)",
+                "Six Sigma (reduce variation)",
+                "Kaizen (continuous small improvements)"
+            ],
+            "selfAssessment": [
+                "Is improvement a regular activity, not one-time?",
+                "Are staff encouraged to suggest improvements?",
+                "Are changes evaluated for effectiveness?",
+                "Are successful changes standardized?"
+            ]
+        },
+        {
+            "number": 10,
+            "title": "Customer Service",
+            "description": "Meet the needs of patients and clinicians",
+            "keyRequirements": [
+                "Identify customer needs and expectations",
+                "Provide timely and accurate results",
+                "Communicate effectively",
+                "Handle complaints promptly",
+                "Seek and act on feedback"
+            ],
+            "customers": [
+                "Patients (accurate, timely results)",
+                "Physicians (interpretive guidance, consultations)",
+                "Nurses (easy ordering, fast TAT)",
+                "Hospital administration (cost-effective)",
+                "Payers (medical necessity)"
+            ],
+            "communicationChannels": [
+                "Test utilization guides",
+                "Critical value protocols",
+                "Quarterly newsletters",
+                "Consultation services",
+                "Customer satisfaction surveys"
+            ],
+            "selfAssessment": [
+                "Are customer needs regularly assessed?",
+                "Is TAT meeting clinician needs?",
+                "Are complaints resolved promptly?",
+                "Is satisfaction measured and acted upon?"
+            ]
+        },
+        {
+            "number": 11,
+            "title": "Facilities & Safety",
+            "description": "Provide safe, suitable laboratory environment",
+            "keyRequirements": [
+                "Design facilities for proper workflow",
+                "Maintain environmental conditions",
+                "Ensure laboratory safety (chemical, biological)",
+                "Provide appropriate PPE",
+                "Train staff on safety procedures"
+            ],
+            "safetyProgram": [
+                "Chemical hygiene plan (OSHA)",
+                "Bloodborne pathogen plan",
+                "Biosafety practices (BSL-2)",
+                "Fire and emergency plans",
+                "Waste disposal procedures"
+            ],
+            "environmentalMonitoring": [
+                "Temperature (reagent storage, testing areas)",
+                "Humidity (affects some tests)",
+                "Air quality (BSC certification)",
+                "Water quality (Type I, II, III)"
+            ],
+            "selfAssessment": [
+                "Are facilities adequate for operations?",
+                "Is environmental monitoring current?",
+                "Are safety incidents investigated?",
+                "Is PPE available and used consistently?"
+            ]
+        },
+        {
+            "number": 12,
+            "title": "Competency Assessment",
+            "description": "Ensure staff are competent to perform assigned tasks",
+            "keyRequirements": [
+                "Assess competency at hire",
+                "Reassess annually and when issues arise",
+                "Use multiple assessment methods",
+                "Document all assessments",
+                "Provide training for gaps"
+            ],
+            "assessmentMethods": [
+                "Direct observation of routine work",
+                "Review of QC/PT/patient results",
+                "Written examination",
+                "Problem-solving exercises",
+                "Blind proficiency samples"
+            ],
+            "competencyDomains": [
+                "Technical skills (performing tests correctly)",
+                "Problem-solving (troubleshooting failures)",
+                "Safety (following procedures)",
+                "Quality (understanding QC/QA)",
+                "Communication (reporting criticals)"
+            ],
+            "frequency": [
+                "Initial (before independent work)",
+                "Annual (all personnel)",
+                "When new test/equipment introduced",
+                "When problems identified",
+                "After extended absence"
+            ],
+            "selfAssessment": [
+                "Are all personnel assessed at hire?",
+                "Is annual assessment completed on time?",
+                "Are multiple methods used?",
+                "Is remedial training provided when needed?"
+            ]
+        }
+    ],
+    "implementation": {
+        "gettingStarted": [
+            "1. Assess current state using self-assessment questions",
+            "2. Prioritize gaps based on risk and regulatory requirements",
+            "3. Develop action plan with timelines and responsibilities",
+            "4. Implement improvements incrementally",
+            "5. Monitor progress with quality indicators",
+            "6. Conduct periodic QMS reviews"
+        ],
+        "commonChallenges": [
+            "Limited resources → Start with high-risk areas",
+            "Staff resistance → Involve them in planning",
+            "Documentation burden → Use templates, electronic systems",
+            "Maintaining momentum → Celebrate wins, leadership support"
+        ]
+    },
+    "quickReference": {
+        "the12Essentials": [
+            "1. Organization",
+            "2. Equipment",
+            "3. Purchasing",
+            "4. Process",
+            "5. Documents",
+            "6. Information",
+            "7. Occurrences",
+            "8. Assessment",
+            "9. Improvement",
+            "10. Customer",
+            "11. Safety",
+            "12. Competency"
+        ],
+        "acronym": "O-E-P-P-D-I-O-A-I-C-F-C"
+    }
+}

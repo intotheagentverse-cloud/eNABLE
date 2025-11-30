@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Colors */
+  --color-brand-purple: #763581;
+  --color-brand-green: #9CC91C;
+  
+  /* Accent Colors */
+  --color-accent-purple: #b23cd4;
+  --color-accent-green: #b5e030;
+  --color-accent-blue: #005fcc;
+
+  /* Backgrounds */
+  --background: #ffffff;
+  --background-secondary: #F8F9FA;
+  --foreground: #333333;
+  --foreground-muted: #555555;
+
+  /* UI Colors */
+  --color-border: #e5e7eb;
+  --color-input-border: #d1d5db;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  
+  --color-brand-purple: var(--color-brand-purple);
+  --color-brand-green: var(--color-brand-green);
+  --color-accent-purple: var(--color-accent-purple);
+  --color-accent-green: var(--color-accent-green);
+  --color-accent-blue: var(--color-accent-blue);
+  
+  --color-border: var(--color-border);
+  --color-input-border: var(--color-input-border);
+
+  --font-sans: var(--font-inter);
+  
+  --shadow-card: 0 4px 12px rgba(0,0,0,0.05);
+  --radius-card: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode adjustments - keeping it light for now as per request, but setting foundations */
+    --background: #0a0a0a;
+    --background-secondary: #171717;
+    --foreground: #ededed;
+    --foreground-muted: #a1a1a1;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground);
+  font-weight: 700;
+}

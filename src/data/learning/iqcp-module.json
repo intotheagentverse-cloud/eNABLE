@@ -1,0 +1,286 @@
+{
+    "id": "iqcp",
+    "title": "IQCP Mastery: Individualized Quality Control Plans",
+    "description": "Master the art of risk-based quality control planning for laboratory testing",
+    "icon": "📊",
+    "difficulty": "Intermediate",
+    "estimatedTime": "45 minutes",
+    "lessons": [
+        {
+            "id": "iqcp-intro",
+            "title": "Introduction to IQCP",
+            "order": 1,
+            "content": {
+                "overview": "The Individualized Quality Control Plan (IQCP) is a risk-based approach to quality control that allows laboratories to customize QC protocols based on specific testing processes.",
+                "keyPoints": [
+                    "IQCP is optional under CLIA §493.1256",
+                    "Combines risk assessment with quality control planning",
+                    "Allows flexibility while maintaining patient safety",
+                    "Requires ongoing quality assessment"
+                ],
+                "whenToUse": {
+                    "title": "When Should You Use IQCP?",
+                    "scenarios": [
+                        "Waived tests elevated to moderate complexity",
+                        "Point-of-care testing (POCT) devices",
+                        "Tests with limited control materials",
+                        "Automated systems with proven stability"
+                    ]
+                },
+                "whenNotToUse": {
+                    "title": "When NOT to Use IQCP",
+                    "scenarios": [
+                        "High complexity tests",
+                        "Test systems with frequent failures",
+                        "Insufficient resources for ongoing assessment",
+                        "New or unstable methods"
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "scenario": "Blood Glucose POCT",
+                    "description": "A hospital uses IQCP for bedside glucose meters. Risk assessment identified operator error as highest risk. QC plan includes weekly electronic QC, monthly liquid QC, and competency assessment every 6 months.",
+                    "outcome": "Reduced QC from daily to weekly while maintaining quality through comprehensive risk mitigation."
+                }
+            ]
+        },
+        {
+            "id": "iqcp-risk-assessment",
+            "title": "Risk Assessment: The Foundation",
+            "order": 2,
+            "content": {
+                "overview": "Risk assessment is the critical first step in IQCP, identifying what can go wrong and how to prevent it.",
+                "steps": [
+                    {
+                        "number": 1,
+                        "title": "Process Mapping",
+                        "description": "Document every step from sample collection to result reporting",
+                        "activities": [
+                            "Create visual flowchart",
+                            "Identify all personnel involved",
+                            "Note equipment and materials used",
+                            "Document decision points"
+                        ]
+                    },
+                    {
+                        "number": 2,
+                        "title": "Hazard Identification",
+                        "description": "Determine what could go wrong at each step",
+                        "categories": [
+                            "Pre-analytical: Wrong patient, hemolysis, insufficient volume",
+                            "Analytical: Reagent failure, calibration drift, interference",
+                            "Post-analytical: Transcription errors, delayed reporting"
+                        ]
+                    },
+                    {
+                        "number": 3,
+                        "title": "Risk Evaluation",
+                        "description": "Score each hazard using Severity × Likelihood matrix",
+                        "matrix": {
+                            "severity": [
+                                "1-Negligible",
+                                "2-Minor",
+                                "3-Major",
+                                "4-Catastrophic"
+                            ],
+                            "likelihood": [
+                                "1-Rare",
+                                "2-Unlikely",
+                                "3-Possible",
+                                "4-Likely"
+                            ],
+                            "riskLevels": {
+                                "1-3": "Low - Accept",
+                                "4-6": "Medium - Monitor",
+                                "8-12": "High - Mitigate",
+                                "16": "Critical - Immediate action"
+                            }
+                        }
+                    },
+                    {
+                        "number": 4,
+                        "title": "Risk Mitigation",
+                        "description": "Implement controls to reduce high-risk hazards",
+                        "strategies": [
+                            "Engineering controls (automated verification)",
+                            "Administrative controls (SOPs, training)",
+                            "Quality control (frequency, materials)",
+                            "Monitoring (error logs, metrics)"
+                        ]
+                    }
+                ]
+            },
+            "practicalTips": [
+                "Involve all staff in hazard identification - frontline workers see risks management misses",
+                "Use historical QC data and CAP A logs to identify real failures",
+                "Don't overlook 'routine' steps - they're where complacency occurs",
+                "Re-assess annually or when process changes"
+            ]
+        },
+        {
+            "id": "iqcp-qc-plan",
+            "title": "Building Your Quality Control Plan",
+            "order": 3,
+            "content": {
+                "overview": "The QC Plan translates risk assessment into actionable quality control measures.",
+                "components": [
+                    {
+                        "title": "QC Frequency",
+                        "description": "How often to run controls",
+                        "options": [
+                            "Daily (traditional)",
+                            "Weekly (stable automated systems)",
+                            "Per shift (POCT)",
+                            "Per patient (electronic QC)",
+                            "Monthly + upon failure (low risk)"
+                        ],
+                        "decisionFactors": [
+                            "Risk level from assessment",
+                            "Test volume",
+                            "Historical stability",
+                            "Regulatory requirements"
+                        ]
+                    },
+                    {
+                        "title": "Control Materials",
+                        "description": "Which QC materials to use",
+                        "types": [
+                            "Liquid controls (traditional)",
+                            "Electronic QC (instrument-based)",
+                            "Patient-based QC (moving averages)",
+                            "Proficiency testing samples"
+                        ]
+                    },
+                    {
+                        "title": "Acceptance Criteria",
+                        "description": "When to accept or reject QC",
+                        "methods": [
+                            "Mean ± 2SD (traditional)",
+                            "Westgard multi-rules",
+                            "Manufacturer ranges",
+                            "Custom limits based on risk"
+                        ]
+                    }
+                ],
+                "template": {
+                    "testName": "HbA1c (point-of-care)",
+                    "qcFrequency": "Weekly + with each new lot",
+                    "controlType": "Liquid control (2 levels)",
+                    "acceptanceCriteria": "Westgard 13s/22s/R4s",
+                    "additionalMonitoring": [
+                        "Electronic QC with each patient",
+                        "Correlation check vs lab HbA1c monthly",
+                        "Operator competency every 6 months"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "iqcp-quality-assessment",
+            "title": "Ongoing Quality Assessment",
+            "order": 4,
+            "content": {
+                "overview": "IQCP requires continuous monitoring to ensure the plan remains effective. We assist you in setting up a robust Quality Assessment program.",
+                "requirements": [
+                    {
+                        "title": "QC Performance Review",
+                        "frequency": "Monthly",
+                        "activities": [
+                            "Analyze QC trends (Levey-Jennings charts)",
+                            "Calculate % failures",
+                            "Investigate any violations",
+                            "Document corrective actions",
+                            "Review peer group comparison reports"
+                        ]
+                    },
+                    {
+                        "title": "Patient Result Monitoring",
+                        "frequency": "Ongoing",
+                        "methods": [
+                            "Delta checks (compare to previous)",
+                            "Critical value frequency",
+                            "Correlation with reference method",
+                            "Population mean tracking",
+                            "Moving averages of patient data"
+                        ]
+                    },
+                    {
+                        "title": "Proficiency Testing",
+                        "frequency": "≥3 times/year",
+                        "purpose": "External verification of accuracy against peer labs"
+                    },
+                    {
+                        "title": "Competency Assessment",
+                        "frequency": "Initially, annually, and as needed",
+                        "elements": [
+                            "Direct observation of test performance",
+                            "Monitoring recording and reporting of test results",
+                            "Review of intermediate test results or worksheets",
+                            "Direct observation of instrument maintenance",
+                            "Assessment of test performance through testing previously analyzed specimens",
+                            "Assessment of problem solving skills"
+                        ]
+                    },
+                    {
+                        "title": "Annual IQCP Review",
+                        "required": true,
+                        "reviewItems": [
+                            "Was risk assessment still accurate?",
+                            "Did QC plan catch errors?",
+                            "Any new hazards identified?",
+                            "Is frequency still appropriate?",
+                            "Update plan as needed"
+                        ]
+                    }
+                ],
+                "assistance": {
+                    "title": "How We Assist You",
+                    "description": "Our platform automates many of these QA tasks:",
+                    "features": [
+                        "Automated Levey-Jennings charts and Westgard rule analysis",
+                        "Digital corrective action logging linked to QC failures",
+                        "Reminders for competency assessment and annual reviews",
+                        "Centralized document storage for all IQCP records"
+                    ]
+                },
+                "documentationRequired": [
+                    "Risk assessment (initial + annual reviews)",
+                    "QC plan",
+                    "QC data and charts",
+                    "Corrective action logs",
+                    "Competency records",
+                    "PT results",
+                    "Annual review summaries"
+                ]
+            }
+        }
+    ],
+    "resources": [
+        {
+            "title": "Abbott IQCP Guide",
+            "type": "PDF",
+            "source": "Abbott Individualized Quality Control Plan.pdf",
+            "description": "Comprehensive guide to implementing IQCP"
+        },
+        {
+            "title": "CLSI EP23",
+            "type": "Standard",
+            "description": "Laboratory Quality Control Based on Risk Management"
+        }
+    ],
+    "quickReference": {
+        "iqcpSteps": [
+            "1. Risk Assessment → Identify hazards",
+            "2. QC Plan → Design controls",
+            "3. Quality Assessment → Monitor effectiveness"
+        ],
+        "commonMistakes": [
+            "Skipping risk assessment (using template blindly)",
+            "Setting QC frequency too low without justification",
+            "Failing to document annual reviews",
+            "Not involving all stakeholders",
+            "Ignoring patient result monitoring"
+        ]
+    }
+}

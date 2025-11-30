@@ -1,0 +1,7 @@
+Control Name,Lot Number,Test Name,Result,Unit,Target Mean,Target SD,Date,Time,Analyzer ID,Status
+PreciControl ClinChem Multi 1,17683000,Glucose,102.5,mg/dL,105.0,3.2,2023-11-28,08:15:00,ARCHITECT-001,Pass
+PreciControl ClinChem Multi 1,17683000,Cholesterol,201.3,mg/dL,200.0,5.1,2023-11-28,08:15:00,ARCHITECT-001,Pass
+PreciControl ClinChem Multi 2,17683001,Glucose,305.2,mg/dL,300.0,8.5,2023-11-28,08:16:00,ARCHITECT-001,Warning
+PreciControl ClinChem Multi 2,17683001,Cholesterol,302.1,mg/dL,305.0,7.2,2023-11-28,08:16:00,ARCHITECT-001,Pass
+PreciControl ClinChem Multi 1,17683000,Creatinine,1.25,mg/dL,1.2,0.08,2023-11-28,08:15:00,ARCHITECT-001,Pass
+PreciControl ClinChem Multi 2,17683001,Creatinine,5.15,mg/dL,5.0,0.25,2023-11-28,08:16:00,ARCHITECT-001,Pass
