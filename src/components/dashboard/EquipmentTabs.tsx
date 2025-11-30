@@ -73,7 +73,7 @@ export default function EquipmentTabs({ equipmentData, calibrationData }: Equipm
             ) : activeTab === 'calibration' ? (
                 <CalibrationView data={calibrationData} />
             ) : (
-                <ImportDataView />
+                <ImportDataView equipment={equipmentData} />
             )}
         </div>
     );

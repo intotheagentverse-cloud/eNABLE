@@ -2,30 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { parseQCFile, saveQCData, QCResult, ValidationError } from '@/app/actions/qc-import';
+import { Equipment } from '@/types/database';
 
-const ANALYZER_DATA: Record<string, string[]> = {
-    'Abbott': ['ARCHITECT ci4100', 'ARCHITECT ci8200', 'Alinity c', 'Alinity i'],
-    'Roche': ['cobas c311', 'cobas c501', 'cobas e411', 'cobas e601', 'cobas pro'],
-    'Beckman Coulter': ['DxC 700 AU', 'AU480', 'AU680', 'DxI 9000'],
-    'Siemens': ['Atellica Solution', 'Dimension EXL', 'Advia Centaur'],
-    'Sysmex': ['XN-1000', 'XN-2000', 'XN-L Series'],
-    'Bio-Rad': ['D-10', 'Variant II Turbo']
-};
+interface ImportDataViewProps {
+    equipment: Equipment[];
+}
 
-export default function ImportDataView() {
-    const [brand, setBrand] = useState('');
-    const [model, setModel] = useState('');
+export default function ImportDataView({ equipment }: ImportDataViewProps) {
+    const [selectedEquipment, setSelectedEquipment] = useState('');
     const [file, setFile] = useState<File | null>(null);
     const [previewData, setPreviewData] = useState<QCResult[] | null>(null);
     const [errors, setErrors] = useState<ValidationError[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [importResult, setImportResult] = useState<string | null>(null);
     const [dragActive, setDragActive] = useState(false);
-
-    // Reset model when brand changes
-    useEffect(() => {
-        setModel('');
-    }, [brand]);
 
     const handleDrag = (e: React.DragEvent) => {
         e.preventDefault();
@@ -65,8 +55,8 @@ export default function ImportDataView() {
     };
 
     const handleUploadAndPreview = async () => {
-        if (!file || !brand || !model) {
-            alert('Please select a brand, model, and file');
+        if (!file || !selectedEquipment) {
+            alert('Please select equipment and a file');
             return;
         }
 
@@ -77,7 +67,10 @@ export default function ImportDataView() {
 
         const formData = new FormData();
         formData.append('file', file);
-        const analyzerType = `${brand} ${model}`;
+
+        // Get equipment details
+        const eq = equipment.find(e => e.id === selectedEquipment);
+        const analyzerType = eq ? `${eq.manufacturer} ${eq.model}` : 'Generic';
 
         const result = await parseQCFile(formData, analyzerType);
 
@@ -102,8 +95,7 @@ export default function ImportDataView() {
             setImportResult(`✓ Successfully imported ${result.imported_count} QC records${result.duplicate_count ? ` (${result.duplicate_count} duplicates skipped)` : ''}`);
             setPreviewData(null);
             setFile(null);
-            setBrand('');
-            setModel('');
+            setSelectedEquipment('');
         } else {
             alert(result.message);
         }
@@ -111,37 +103,26 @@ export default function ImportDataView() {
 
     return (
         <div className="space-y-6">
-            {/* Analyzer Selection */}
+            {/* Equipment Selection */}
             <div className="bg-white shadow rounded-lg p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Step 1: Select Analyzer</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-                        <select
-                            value={brand}
-                            onChange={(e) => setBrand(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="">-- Select Brand --</option>
-                            {Object.keys(ANALYZER_DATA).map((b) => (
-                                <option key={b} value={b}>{b}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
-                        <select
-                            value={model}
-                            onChange={(e) => setModel(e.target.value)}
-                            disabled={!brand}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-400"
-                        >
-                            <option value="">-- Select Model --</option>
-                            {brand && ANALYZER_DATA[brand].map((m) => (
-                                <option key={m} value={m}>{m}</option>
-                            ))}
-                        </select>
-                    </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Step 1: Select Equipment</h3>
+                <div className="max-w-md">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Equipment</label>
+                    <select
+                        value={selectedEquipment}
+                        onChange={(e) => setSelectedEquipment(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    >
+                        <option value="">-- Select Equipment --</option>
+                        {equipment.map((eq) => (
+                            <option key={eq.id} value={eq.id}>
+                                {eq.equipment_name} ({eq.manufacturer} {eq.model})
+                            </option>
+                        ))}
+                    </select>
+                    <p className="mt-1 text-xs text-gray-500">
+                        Select the equipment this QC data is from
+                    </p>
                 </div>
             </div>
 
@@ -182,7 +163,7 @@ export default function ImportDataView() {
                         <p className="text-sm text-gray-600">Selected: {file.name}</p>
                         <button
                             onClick={handleUploadAndPreview}
-                            disabled={!brand || !model || isLoading}
+                            disabled={!selectedEquipment || isLoading}
                             className="mt-3 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                             {isLoading ? 'Processing...' : 'Upload & Preview'}
