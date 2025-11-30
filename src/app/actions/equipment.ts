@@ -42,15 +42,8 @@ export async function addEquipment(formData: FormData) {
         model: formData.get('model') as string,
         serial_number: formData.get('serial_number') as string || null,
         location: formData.get('location') as string || null,
-        status: 'ACTIVE',
-        // Set defaults for other fields
-        equipment_category: null,
-        equipment_type: null,
-        nabl_risk_level: 'MEDIUM',
         calibration_interval_days: 365,
-        lab_tier: 'TIER_1',
-        integration_method: null,
-        integration_status: 'Pending Setup',
+
     };
 
     const { error } = await supabase
