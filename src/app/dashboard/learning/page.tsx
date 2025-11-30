@@ -3,7 +3,9 @@
 import { useRouter } from "next/navigation";
 import LearningModuleCard from "@/components/learning/LearningModuleCard";
 
-export default function LearningCenterPage() {
+import { Suspense } from "react";
+
+function LearningContent() {
     const router = useRouter();
 
     const modules = [
@@ -106,5 +108,13 @@ export default function LearningCenterPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LearningCenterPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LearningContent />
+        </Suspense>
     );
 }

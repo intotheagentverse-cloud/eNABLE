@@ -3,6 +3,8 @@ import { TEST_LAB_ID } from '@/lib/constants';
 import Link from 'next/link';
 import LotVariationAnalysis from '@/components/dashboard/LotVariationAnalysis';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ReagentsPage() {
     const reagents = await getReagents(TEST_LAB_ID);
     const expiring = await getExpiringReagents(TEST_LAB_ID, 30);

@@ -2,6 +2,8 @@ import { getAudits } from '@/app/actions/audits';
 import { TEST_LAB_ID } from '@/lib/constants';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AuditsPage() {
     const audits = await getAudits(TEST_LAB_ID);
 
@@ -82,8 +84,8 @@ export default async function AuditsPage() {
                                             <td className="px-4 py-3 text-sm text-gray-500">{audit.lead_auditor || 'Not assigned'}</td>
                                             <td className="px-4 py-3">
                                                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${audit.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                                                        audit.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800' :
-                                                            'bg-yellow-100 text-yellow-800'
+                                                    audit.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800' :
+                                                        'bg-yellow-100 text-yellow-800'
                                                     }`}>
                                                     {audit.status}
                                                 </span>

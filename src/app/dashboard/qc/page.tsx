@@ -4,6 +4,8 @@ import QCChartsView from '@/components/dashboard/QCChartsView';
 import { generateMockQCData } from '@/lib/mock-qc-data';
 import { calculateControlLimits, prepareChartData } from '@/lib/levey-jennings';
 
+export const dynamic = 'force-dynamic';
+
 export default async function QCPage({
     searchParams,
 }: {

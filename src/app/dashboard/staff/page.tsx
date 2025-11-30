@@ -2,6 +2,8 @@ import { getStaffMembers, getExpiringTraining, getExpiringCertificates } from '@
 import { TEST_LAB_ID } from '@/lib/constants';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function StaffPage() {
     const staff = await getStaffMembers(TEST_LAB_ID);
     const expiringTraining = await getExpiringTraining(TEST_LAB_ID, 30);
@@ -105,7 +107,7 @@ export default async function StaffPage() {
                                             <td className="px-4 py-3 text-sm text-gray-500">{member.department || 'N/A'}</td>
                                             <td className="px-4 py-3">
                                                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${member.status === 'ACTIVE' ? 'bg-green-100 text-green-800' :
-                                                        'bg-gray-100 text-gray-800'
+                                                    'bg-gray-100 text-gray-800'
                                                     }`}>
                                                     {member.status}
                                                 </span>

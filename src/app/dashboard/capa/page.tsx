@@ -1,5 +1,7 @@
 import { getAllCAPA } from '@/app/actions/audits';
 import { TEST_LAB_ID } from '@/lib/constants';
+
+export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import DeviationManagementEnhanced from '@/components/dashboard/DeviationManagementEnhanced';
 

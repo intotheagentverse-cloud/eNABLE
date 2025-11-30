@@ -12,7 +12,9 @@ interface Message {
     agents_consulted?: string[];
 }
 
-export default function NABLAssistantPage() {
+import { Suspense } from "react";
+
+function AssistantContent() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [query, setQuery] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -341,5 +343,13 @@ export default function NABLAssistantPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function NABLAssistantPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AssistantContent />
+        </Suspense>
     );
 }
