@@ -1,8 +1,10 @@
 import { getQCAnalytics } from '@/app/actions/dashboard';
+import { getEquipmentList } from '@/app/actions/equipment';
+import { getQCData, getControlLimits } from '@/app/actions/qc';
 import WestgardViolationsByEquipment from '@/components/dashboard/WestgardViolationsByEquipment';
 import QCChartsView from '@/components/dashboard/QCChartsView';
-import { generateMockQCData } from '@/lib/mock-qc-data';
 import { calculateControlLimits, prepareChartData } from '@/lib/levey-jennings';
+import { TEST_LAB_ID } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,14 +14,55 @@ export default async function QCPage({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
     const params = await searchParams;
-    const labId = (params.labId as string) || 'mock'; // use mock data
+    const labId = (params.labId as string) || TEST_LAB_ID;
 
-    const { violations, chartData } = await getQCAnalytics(labId);
+    // Fetch real equipment from database
+    const equipment = await getEquipmentList(labId);
 
-    // Generate mock QC data for demonstration
-    const mockQCData = generateMockQCData('Glucose', 'PreciControl ClinChem L1', 30);
-    const limits = calculateControlLimits(mockQCData);
-    const leveyJenningsData = prepareChartData(mockQCData, limits);
+    // Get selected equipment ID from query params, or use first equipment
+    const selectedEquipmentId = (params.equipment as string) || equipment[0]?.id;
+    const selectedParameter = (params.parameter as string) || 'Glucose';
+    const selectedLevel = (params.level as string) || 'Level 1';
+
+    // Fetch real QC data and control limits from database
+    let qcData: any[] = [];
+    let limits: any = null;
+    let chartData: any[] = [];
+
+    if (selectedEquipmentId) {
+        qcData = await getQCData(selectedEquipmentId, selectedParameter, selectedLevel);
+        limits = await getControlLimits(selectedEquipmentId, selectedParameter, selectedLevel);
+
+        // If we have control limits and QC data, prepare chart data
+        if (limits && qcData.length > 0) {
+            // Transform database QCTest format to QCResult format for chart
+            const qcResults = qcData.map(test => ({
+                control_name: test.control_level || selectedLevel,
+                lot_number: 'LOT001', // TODO: Add lot tracking
+                test_name: test.parameter_name || selectedParameter,
+                result_value: test.result_obtained || 0,
+                unit: test.unit || 'mg/dL',
+                measurement_date: test.test_date,
+                measurement_time: test.test_time || '00:00',
+                operator_id: test.created_by || 'System',
+                qc_status: test.status || 'Pass',
+            }));
+
+            chartData = prepareChartData(qcResults, {
+                mean: limits.mean_value,
+                sd: limits.sd_value,
+                cv: 0, // TODO: Calculate CV
+                plus1sd: limits.mean_value + limits.sd_value,
+                minus1sd: limits.mean_value - limits.sd_value,
+                plus2sd: limits.mean_value + (2 * limits.sd_value),
+                minus2sd: limits.mean_value - (2 * limits.sd_value),
+                plus3sd: limits.mean_value + (3 * limits.sd_value),
+                minus3sd: limits.mean_value - (3 * limits.sd_value),
+            });
+        }
+    }
+
+    const { violations, chartData: analyticsChartData } = await getQCAnalytics(labId);
 
     return (
         <div className="space-y-6">
@@ -37,8 +80,22 @@ export default async function QCPage({
 
             {/* Interactive Charts with Equipment Selector */}
             <QCChartsView
-                initialData={leveyJenningsData}
-                initialLimits={limits}
+                equipment={equipment}
+                selectedEquipmentId={selectedEquipmentId}
+                selectedParameter={selectedParameter}
+                selectedLevel={selectedLevel}
+                initialData={chartData}
+                initialLimits={limits ? {
+                    mean: limits.mean_value,
+                    sd: limits.sd_value,
+                    cv: 0,
+                    plus1sd: limits.mean_value + limits.sd_value,
+                    minus1sd: limits.mean_value - limits.sd_value,
+                    plus2sd: limits.mean_value + (2 * limits.sd_value),
+                    minus2sd: limits.mean_value - (2 * limits.sd_value),
+                    plus3sd: limits.mean_value + (3 * limits.sd_value),
+                    minus3sd: limits.mean_value - (3 * limits.sd_value),
+                } : null}
             />
         </div>
     );
