@@ -35,22 +35,24 @@ export async function getEquipmentById(id: string): Promise<Equipment | null> {
 }
 
 export async function addEquipment(formData: FormData) {
+    const calibrationDays = formData.get('calibration_interval_days');
+
     const rawData = {
         lab_id: formData.get('lab_id') as string,
         equipment_name: formData.get('equipment_name') as string,
-        equipment_category: formData.get('equipment_category') as string,
-        equipment_type: formData.get('equipment_type') as string,
-        equipment_brand: formData.get('equipment_brand') as string,
-        manufacturer: formData.get('equipment_brand') as string, // Use brand as manufacturer
-        model: formData.get('model') as string,
-        serial_number: formData.get('serial_number') as string,
-        nabl_risk_level: formData.get('nabl_risk_level') as string,
-        calibration_interval_days: parseInt(formData.get('calibration_interval_days') as string),
-        location: formData.get('location') as string,
+        equipment_category: formData.get('equipment_category') as string || null,
+        equipment_type: formData.get('equipment_type') as string || null,
+        equipment_brand: formData.get('equipment_brand') as string || null,
+        manufacturer: formData.get('equipment_brand') as string || null,
+        model: formData.get('model') as string || null,
+        serial_number: formData.get('serial_number') as string || null,
+        nabl_risk_level: (formData.get('nabl_risk_level') as string) || 'MEDIUM',
+        calibration_interval_days: calibrationDays ? parseInt(calibrationDays as string) : 365,
+        location: formData.get('location') as string || null,
         status: 'ACTIVE',
-        lab_tier: formData.get('lab_tier') as string,
-        integration_method: formData.get('integration_method') as string,
-        integration_status: formData.get('integration_status') as string || 'Pending Setup',
+        lab_tier: (formData.get('lab_tier') as string) || 'TIER_1',
+        integration_method: formData.get('integration_method') as string || null,
+        integration_status: (formData.get('integration_status') as string) || 'Pending Setup',
     };
 
     const { error } = await supabase
@@ -59,7 +61,7 @@ export async function addEquipment(formData: FormData) {
 
     if (error) {
         console.error('Error adding equipment:', error);
-        return { success: false, message: 'Failed to add equipment' };
+        return { success: false, message: `Failed to add equipment: ${error.message}` };
     }
 
     revalidatePath('/dashboard/equipment');
