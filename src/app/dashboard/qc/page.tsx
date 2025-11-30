@@ -42,11 +42,14 @@ export default async function QCPage({
                 test_name: test.parameter_name || selectedParameter,
                 result_value: test.result_obtained || 0,
                 unit: test.unit || 'mg/dL',
+                target_mean: limits?.mean_value || 0,
+                target_sd: limits?.sd_value || 1,
                 measurement_date: test.test_date,
                 measurement_time: test.test_time || '00:00',
+                analyzer_id: selectedEquipmentId,
                 operator_id: test.created_by || 'System',
                 qc_status: test.status || 'Pass',
-            }));
+            })) as any[];
 
             chartData = prepareChartData(qcResults, {
                 mean: limits.mean_value,
