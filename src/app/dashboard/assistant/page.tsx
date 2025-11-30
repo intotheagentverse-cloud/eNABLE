@@ -198,8 +198,9 @@ function AssistantContent() {
                                 <div className={`prose prose-sm max-w-none ${msg.role === "user" ? "text-gray-800" : "text-gray-900"}`}>
                                     <ReactMarkdown
                                         components={{
-                                            code({ node, inline, className, children, ...props }: any) {
+                                            code({ className, children, ...props }: any) {
                                                 const match = /language-(\w+)/.exec(className || '');
+                                                const inline = !className;
                                                 return !inline && match ? (
                                                     <SyntaxHighlighter
                                                         style={vscDarkPlus}
