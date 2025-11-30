@@ -35,24 +35,22 @@ export async function getEquipmentById(id: string): Promise<Equipment | null> {
 }
 
 export async function addEquipment(formData: FormData) {
-    const calibrationDays = formData.get('calibration_interval_days');
-
     const rawData = {
         lab_id: formData.get('lab_id') as string,
         equipment_name: formData.get('equipment_name') as string,
-        equipment_category: formData.get('equipment_category') as string || null,
-        equipment_type: formData.get('equipment_type') as string || null,
-        equipment_brand: formData.get('equipment_brand') as string || null,
-        manufacturer: formData.get('equipment_brand') as string || null,
-        model: formData.get('model') as string || null,
+        manufacturer: formData.get('manufacturer') as string,
+        model: formData.get('model') as string,
         serial_number: formData.get('serial_number') as string || null,
-        nabl_risk_level: (formData.get('nabl_risk_level') as string) || 'MEDIUM',
-        calibration_interval_days: calibrationDays ? parseInt(calibrationDays as string) : 365,
         location: formData.get('location') as string || null,
         status: 'ACTIVE',
-        lab_tier: (formData.get('lab_tier') as string) || 'TIER_1',
-        integration_method: formData.get('integration_method') as string || null,
-        integration_status: (formData.get('integration_status') as string) || 'Pending Setup',
+        // Set defaults for other fields
+        equipment_category: null,
+        equipment_type: null,
+        nabl_risk_level: 'MEDIUM',
+        calibration_interval_days: 365,
+        lab_tier: 'TIER_1',
+        integration_method: null,
+        integration_status: 'Pending Setup',
     };
 
     const { error } = await supabase
