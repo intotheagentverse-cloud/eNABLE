@@ -1,18 +1,18 @@
-"use client";
-
 import { useState } from 'react';
 import Link from 'next/link';
 import EquipmentRegistryView from '@/components/dashboard/EquipmentRegistryView';
 import CalibrationView from '@/components/dashboard/CalibrationView';
 import ImportDataView from '@/components/dashboard/ImportDataView';
+import ValidationView from '@/components/dashboard/ValidationView';
 
 interface EquipmentTabsProps {
     equipmentData: any[];
     calibrationData: any;
+    validationData: any;
 }
 
-export default function EquipmentTabs({ equipmentData, calibrationData }: EquipmentTabsProps) {
-    const [activeTab, setActiveTab] = useState<'registry' | 'calibration' | 'import'>('registry');
+export default function EquipmentTabs({ equipmentData, calibrationData, validationData }: EquipmentTabsProps) {
+    const [activeTab, setActiveTab] = useState<'registry' | 'calibration' | 'validation' | 'import'>('registry');
 
     return (
         <div className="p-6 space-y-6">
@@ -56,6 +56,15 @@ export default function EquipmentTabs({ equipmentData, calibrationData }: Equipm
                         Calibration Management
                     </button>
                     <button
+                        onClick={() => setActiveTab('validation')}
+                        className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'validation'
+                            ? 'border-blue-500 text-blue-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                            }`}
+                    >
+                        Validation (IQ/OQ/PQ)
+                    </button>
+                    <button
                         onClick={() => setActiveTab('import')}
                         className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'import'
                             ? 'border-blue-500 text-blue-600'
@@ -72,6 +81,8 @@ export default function EquipmentTabs({ equipmentData, calibrationData }: Equipm
                 <EquipmentRegistryView equipment={equipmentData} />
             ) : activeTab === 'calibration' ? (
                 <CalibrationView data={calibrationData} />
+            ) : activeTab === 'validation' ? (
+                <ValidationView equipment={equipmentData} data={validationData} />
             ) : (
                 <ImportDataView equipment={equipmentData} />
             )}
