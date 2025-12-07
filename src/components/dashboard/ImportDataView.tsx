@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { parseQCFile, saveQCData, QCResult, ValidationError } from '@/app/actions/qc-import';
+import { parseQCFile, processQCImport, QCResult, ValidationError } from '@/app/actions/qc-import';
 import { Equipment } from '@/types/database';
 
 interface ImportDataViewProps {
@@ -88,7 +88,9 @@ export default function ImportDataView({ equipment }: ImportDataViewProps) {
         if (!previewData || !file) return;
 
         setIsLoading(true);
-        const result = await saveQCData(previewData, file.name);
+        const eq = equipment.find(e => e.id === selectedEquipment);
+        const labId = eq?.lab_id || '';
+        const result = await processQCImport(previewData, file.name, selectedEquipment, labId);
         setIsLoading(false);
 
         if (result.status === 'success') {

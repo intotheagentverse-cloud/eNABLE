@@ -1,96 +1,129 @@
-import { QCTest, ControlLimit } from '@/types/database';
 
-export type WestgardResult = {
-    status: 'PASS' | 'WARNING' | 'REJECT';
-    rule: string | null;
-    message: string | null;
-};
+export type WestgardRule = '1_2s' | '1_3s' | '2_2s' | 'R_4s' | '4_1s' | '10_x';
 
-export function checkWestgardRules(
-    currentTest: number,
-    history: number[], // Previous results, most recent first
-    mean: number,
-    sd: number
-): WestgardResult {
-    const zScore = (currentTest - mean) / sd;
-    const zScoreAbs = Math.abs(zScore);
+export interface QCDataPoint {
+    value: number;
+    mean: number;
+    sd: number;
+    date: string;
+}
 
-    // Rule 1-3s: One point outside 3SD (Rejection)
-    if (zScoreAbs > 3) {
-        return {
-            status: 'REJECT',
-            rule: '1-3s',
-            message: 'Result exceeds 3SD limit. Random error likely.'
-        };
-    }
+export interface WestgardViolation {
+    rule: WestgardRule;
+    index: number; // Index of the data point that triggered the violation
+    message: string;
+}
 
-    // Rule 2-2s: Two consecutive points outside 2SD on the same side (Rejection)
-    if (history.length >= 1) {
-        const prevZ = (history[0] - mean) / sd;
-        if (zScoreAbs > 2 && Math.abs(prevZ) > 2 && Math.sign(zScore) === Math.sign(prevZ)) {
-            return {
-                status: 'REJECT',
-                rule: '2-2s',
-                message: 'Two consecutive points exceed 2SD on the same side. Systematic error likely.'
-            };
+/**
+ * Checks for Westgard rule violations in a sequence of QC data.
+ * The data should be sorted by date (oldest to newest).
+ * 
+ * Rules implemented:
+ * - 1_2s: One point outside ±2SD (Warning)
+ * - 1_3s: One point outside ±3SD (Reject)
+ * - 2_2s: Two consecutive points outside ±2SD on the same side (Reject)
+ * - R_4s: Range between two consecutive points exceeds 4SD (Reject)
+ * - 4_1s: Four consecutive points outside ±1SD on the same side (Reject)
+ * - 10_x: Ten consecutive points on the same side of the mean (Reject)
+ */
+export function checkWestgardRules(data: QCDataPoint[]): WestgardViolation[] {
+    const violations: WestgardViolation[] = [];
+
+    if (data.length === 0) return violations;
+
+    // We iterate through the data, but we mainly check the last point for violations
+    // However, some rules require looking back at previous points.
+    // For a full analysis of historical data, we would iterate all points.
+    // Here we assume we want to find all violations in the provided dataset.
+
+    for (let i = 0; i < data.length; i++) {
+        const current = data[i];
+        const zScore = (current.value - current.mean) / current.sd;
+
+        // 1_3s: One point outside ±3SD
+        if (Math.abs(zScore) > 3) {
+            violations.push({
+                rule: '1_3s',
+                index: i,
+                message: `Result ${current.value} is outside ±3SD limit.`
+            });
+        }
+
+        // 1_2s: One point outside ±2SD (Warning)
+        // This is usually just a warning, but often triggers looking for other rules.
+        if (Math.abs(zScore) > 2) {
+            violations.push({
+                rule: '1_2s',
+                index: i,
+                message: `Result ${current.value} is outside ±2SD limit.`
+            });
+        }
+
+        // 2_2s: Two consecutive points outside ±2SD on the same side
+        if (i > 0) {
+            const prev = data[i - 1];
+            const prevZ = (prev.value - prev.mean) / prev.sd;
+
+            if (Math.abs(zScore) > 2 && Math.abs(prevZ) > 2) {
+                if ((zScore > 0 && prevZ > 0) || (zScore < 0 && prevZ < 0)) {
+                    violations.push({
+                        rule: '2_2s',
+                        index: i,
+                        message: `Two consecutive points outside ±2SD on the same side.`
+                    });
+                }
+            }
+        }
+
+        // R_4s: Range between two consecutive points exceeds 4SD
+        // This typically applies when one is > +2SD and other is < -2SD
+        if (i > 0) {
+            const prev = data[i - 1];
+            const prevZ = (prev.value - prev.mean) / prev.sd;
+
+            if (Math.abs(zScore - prevZ) > 4) {
+                violations.push({
+                    rule: 'R_4s',
+                    index: i,
+                    message: `Range between consecutive points exceeds 4SD.`
+                });
+            }
+        }
+
+        // 4_1s: Four consecutive points outside ±1SD on the same side
+        if (i >= 3) {
+            const points = data.slice(i - 3, i + 1);
+            const zScores = points.map(p => (p.value - p.mean) / p.sd);
+
+            const allPositive = zScores.every(z => z > 1);
+            const allNegative = zScores.every(z => z < -1);
+
+            if (allPositive || allNegative) {
+                violations.push({
+                    rule: '4_1s',
+                    index: i,
+                    message: `Four consecutive points outside ±1SD on the same side.`
+                });
+            }
+        }
+
+        // 10_x: Ten consecutive points on the same side of the mean
+        if (i >= 9) {
+            const points = data.slice(i - 9, i + 1);
+            const diffs = points.map(p => p.value - p.mean);
+
+            const allPositive = diffs.every(d => d > 0);
+            const allNegative = diffs.every(d => d < 0);
+
+            if (allPositive || allNegative) {
+                violations.push({
+                    rule: '10_x',
+                    index: i,
+                    message: `Ten consecutive points on the same side of the mean.`
+                });
+            }
         }
     }
 
-    // Rule R-4s: Range between two consecutive points exceeds 4SD (Rejection)
-    if (history.length >= 1) {
-        const prevZ = (history[0] - mean) / sd;
-        if (Math.abs(zScore - prevZ) > 4) {
-            return {
-                status: 'REJECT',
-                rule: 'R-4s',
-                message: 'Range between consecutive points exceeds 4SD. Random error likely.'
-            };
-        }
-    }
-
-    // Rule 4-1s: Four consecutive points outside 1SD on the same side (Rejection)
-    if (history.length >= 3) {
-        const last3 = history.slice(0, 3);
-        const allOutside1SD = last3.every(val => {
-            const z = (val - mean) / sd;
-            return Math.abs(z) > 1 && Math.sign(z) === Math.sign(zScore);
-        });
-
-        if (zScoreAbs > 1 && allOutside1SD) {
-            return {
-                status: 'REJECT',
-                rule: '4-1s',
-                message: 'Four consecutive points exceed 1SD on the same side. Systematic error likely.'
-            };
-        }
-    }
-
-    // Rule 10x: Ten consecutive points on the same side of the mean (Rejection)
-    if (history.length >= 9) {
-        const last9 = history.slice(0, 9);
-        const allSameSide = last9.every(val => Math.sign(val - mean) === Math.sign(currentTest - mean));
-
-        if (allSameSide) {
-            return {
-                status: 'REJECT',
-                rule: '10x',
-                message: 'Ten consecutive points on the same side of the mean. Systematic error likely.'
-            };
-        }
-    }
-
-    // Rule 1-2s: One point outside 2SD (Warning)
-    if (zScoreAbs > 2) {
-        return {
-            status: 'WARNING',
-            rule: '1-2s',
-            message: 'Result exceeds 2SD limit. Warning only.'
-        };
-    }
-
-    return {
-        status: 'PASS',
-        rule: null,
-        message: null
-    };
+    return violations;
 }

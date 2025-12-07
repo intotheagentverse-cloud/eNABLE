@@ -1,6 +1,7 @@
 import { getEquipmentList } from '@/app/actions/equipment';
-import { getCalibrationHistory } from '@/app/actions/calibration';
-import LogCalibrationForm from '@/components/dashboard/LogCalibrationForm';
+import { getCalibrationHistory, getMaintenanceHistory } from '@/app/actions/calibration';
+import CalibrationHistory from '@/components/dashboard/CalibrationHistory';
+import MaintenanceHistory from '@/components/dashboard/MaintenanceHistory';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -19,7 +20,10 @@ export default async function EquipmentDetailPage({ params }: { params: Promise<
         notFound();
     }
 
-    const calibrations = await getCalibrationHistory(id);
+    const [calibrations, maintenanceLogs] = await Promise.all([
+        getCalibrationHistory(id),
+        getMaintenanceHistory(id)
+    ]);
 
     return (
         <div className="space-y-6">
@@ -35,12 +39,16 @@ export default async function EquipmentDetailPage({ params }: { params: Promise<
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Details</h3>
                 <dl className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-6">
                     <div>
-                        <dt className="text-sm font-medium text-gray-500">Serial Number</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{equipment.serial_number || '-'}</dd>
+                        <dt className="text-sm font-medium text-gray-500">Model / Serial</dt>
+                        <dd className="mt-1 text-sm text-gray-900">{equipment.model || '-'} / {equipment.serial_number || '-'}</dd>
                     </div>
                     <div>
-                        <dt className="text-sm font-medium text-gray-500">Type</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{equipment.equipment_type || '-'}</dd>
+                        <dt className="text-sm font-medium text-gray-500">Manufacturer</dt>
+                        <dd className="mt-1 text-sm text-gray-900">{equipment.manufacturer || '-'}</dd>
+                    </div>
+                    <div>
+                        <dt className="text-sm font-medium text-gray-500">Location</dt>
+                        <dd className="mt-1 text-sm text-gray-900">{equipment.location || '-'}</dd>
                     </div>
                     <div>
                         <dt className="text-sm font-medium text-gray-500">Status</dt>
@@ -58,46 +66,18 @@ export default async function EquipmentDetailPage({ params }: { params: Promise<
                 </dl>
             </div>
 
-            {/* Calibration History */}
-            <div className="bg-white shadow rounded-lg p-6">
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">Calibration History</h3>
-                </div>
+            {/* Calibration & Maintenance Sections */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <CalibrationHistory
+                    equipmentId={equipment.id}
+                    intervalDays={equipment.calibration_interval_days || 365}
+                    history={calibrations}
+                />
 
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Next Due</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Provider</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Certificate</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {calibrations.length === 0 ? (
-                                <tr>
-                                    <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">No calibration records found.</td>
-                                </tr>
-                            ) : (
-                                calibrations.map((cal) => (
-                                    <tr key={cal.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{cal.calibration_date}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{cal.next_due_date}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cal.calibration_provider}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cal.certificate_number}</td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {/* Log Calibration Form */}
-            <div className="bg-white shadow rounded-lg p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Log New Calibration</h3>
-                <LogCalibrationForm equipmentId={equipment.id} intervalDays={equipment.calibration_interval_days || 365} />
+                <MaintenanceHistory
+                    equipmentId={equipment.id}
+                    history={maintenanceLogs}
+                />
             </div>
         </div>
     );

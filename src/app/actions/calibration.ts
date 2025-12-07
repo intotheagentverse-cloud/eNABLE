@@ -89,12 +89,21 @@ export async function getCalibrationOverview(labId: string) {
         return { ...eq, calibrationStatus: status, nextDue: nextDue };
     }));
 
+    // Fetch scheduled maintenance
+    const { data: maintenance } = await supabase
+        .from('maintenance_logs')
+        .select('*, equipment(equipment_name)')
+        .eq('status', 'SCHEDULED')
+        .order('next_due_date', { ascending: true })
+        .limit(5);
+
     return {
         total: equipment.length,
         compliant: compliantCount,
         overdue: overdueCount,
         upcoming: upcoming,
-        recent: recentCalibrations || []
+        recent: recentCalibrations || [],
+        maintenance: maintenance || []
     };
 }
 
@@ -130,7 +139,7 @@ export async function logCalibration(formData: FormData) {
         calibration_provider: formData.get('calibration_provider') as string,
         certificate_number: formData.get('certificate_number') as string,
         performed_by: formData.get('performed_by') as string,
-        status: 'COMPLETED',
+        status: 'PASS',
     };
 
     const { error } = await supabase
@@ -144,4 +153,46 @@ export async function logCalibration(formData: FormData) {
 
     revalidatePath(`/dashboard/equipment/${equipmentId}`);
     return { success: true, message: 'Calibration logged successfully' };
+}
+
+export async function getMaintenanceHistory(equipmentId: string) {
+    const { data, error } = await supabase
+        .from('maintenance_logs')
+        .select('*')
+        .eq('equipment_id', equipmentId)
+        .order('maintenance_date', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching maintenance history:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+export async function addMaintenanceLog(formData: FormData) {
+    const equipmentId = formData.get('equipment_id') as string;
+
+    const rawData = {
+        equipment_id: equipmentId,
+        maintenance_date: formData.get('maintenance_date') as string,
+        maintenance_type: formData.get('maintenance_type') as string,
+        description: formData.get('description') as string,
+        performed_by: formData.get('performed_by') as string,
+        cost: formData.get('cost') ? parseFloat(formData.get('cost') as string) : null,
+        next_due_date: formData.get('next_due_date') as string || null,
+        status: 'COMPLETED' // Default to completed for now
+    };
+
+    const { error } = await supabase
+        .from('maintenance_logs')
+        .insert(rawData);
+
+    if (error) {
+        console.error('Error logging maintenance:', error);
+        return { success: false, message: 'Failed to log maintenance' };
+    }
+
+    revalidatePath(`/dashboard/equipment/${equipmentId}`);
+    return { success: true, message: 'Maintenance logged successfully' };
 }

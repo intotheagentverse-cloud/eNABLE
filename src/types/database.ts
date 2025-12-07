@@ -275,3 +275,16 @@ export type Certificate = {
     created_at: string;
     updated_at: string;
 };
+export type MaintenanceLog = {
+    id: string;
+    equipment_id: string;
+    maintenance_date: string;
+    maintenance_type: 'PREVENTIVE' | 'CORRECTIVE' | 'BREAKDOWN';
+    description: string | null;
+    performed_by: string | null;
+    cost: number | null;
+    next_due_date: string | null;
+    status: 'COMPLETED' | 'SCHEDULED' | 'PENDING';
+    created_at: string;
+    updated_at: string;
+};

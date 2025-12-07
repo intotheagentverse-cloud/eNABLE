@@ -2,6 +2,7 @@
 
 import Papa from 'papaparse';
 import { supabase } from '@/lib/supabase';
+import { evaluateQCSeries } from './qc-evaluation';
 
 export interface QCResult {
     control_name: string;
@@ -225,7 +226,12 @@ export async function parseQCFile(
     }
 }
 
-export async function saveQCData(data: QCResult[], fileName: string): Promise<{
+export async function saveQCData(
+    data: QCResult[],
+    fileName: string,
+    equipmentId: string,
+    labId: string
+): Promise<{
     status: 'success' | 'error';
     message: string;
     imported_count?: number;
@@ -237,13 +243,13 @@ export async function saveQCData(data: QCResult[], fileName: string): Promise<{
         for (let i = 0; i < data.length; i++) {
             const record = data[i];
             const { data: existing } = await supabase
-                .from('qc_results')
+                .from('qc_tests')
                 .select('id')
-                .eq('control_name', record.control_name)
-                .eq('lot_number', record.lot_number)
-                .eq('test_name', record.test_name)
-                .eq('measurement_date', record.measurement_date)
-                .eq('measurement_time', record.measurement_time);
+                .eq('equipment_id', equipmentId)
+                .eq('parameter_name', record.test_name)
+                .eq('control_level', record.control_name)
+                .eq('test_date', record.measurement_date)
+                .eq('test_time', record.measurement_time);
 
             if (existing && existing.length > 0) {
                 duplicates.push(i);
@@ -260,14 +266,25 @@ export async function saveQCData(data: QCResult[], fileName: string): Promise<{
             };
         }
 
-        // Insert data
+        // Insert data into qc_tests
         const recordsToInsert = newData.map(record => ({
-            ...record,
-            source_file_name: fileName,
+            lab_id: labId,
+            equipment_id: equipmentId,
+            test_date: record.measurement_date,
+            test_time: record.measurement_time,
+            parameter_name: record.test_name,
+            control_level: record.control_name,
+            result_obtained: record.result_value,
+            unit: record.unit,
+            status: record.qc_status.toUpperCase(), // 'PASS', 'FAIL', 'WARNING'
+            created_by: 'IMPORT',
+            // Store target values if needed, but schema might not have them directly
+            // We could store them in a JSONB column if it exists, or ignore for now
+            // For now, we map what we can
         }));
 
         const { error } = await supabase
-            .from('qc_results')
+            .from('qc_tests')
             .insert(recordsToInsert);
 
         if (error) {
@@ -286,4 +303,27 @@ export async function saveQCData(data: QCResult[], fileName: string): Promise<{
             message: `Failed to save data: ${error}`,
         };
     }
+}
+
+export async function processQCImport(data: QCResult[], fileName: string, equipmentId: string, labId: string) {
+    const saveResult = await saveQCData(data, fileName, equipmentId, labId);
+
+    if (saveResult.status === 'success') {
+        // Identify unique series to evaluate
+        const series = new Set<string>();
+        data.forEach(r => {
+            series.add(`${r.test_name}|${r.control_name}|${r.lot_number}`);
+        });
+
+        // Trigger evaluation for each series
+        // We do this asynchronously/background ideally, but for now await it or just fire and forget
+        // For better UX, maybe we should await it so the user sees the updated status immediately
+
+        for (const s of Array.from(series)) {
+            const [testName, controlName, lotNumber] = s.split('|');
+            await evaluateQCSeries(testName, controlName, lotNumber, labId);
+        }
+    }
+
+    return saveResult;
 }
